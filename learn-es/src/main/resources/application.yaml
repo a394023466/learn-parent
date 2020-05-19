@@ -1,0 +1,5 @@
+elasticsearch:
+  cluster:
+    name: es-cluster
+  host: 192.168.251.10
+  port: 9300
