@@ -26,7 +26,7 @@ public class JCloudsGlanceV3 {
         overrides.put(KeystoneProperties.SCOPE, "project:admin");
         overrides.put(KeystoneProperties.SCOPE, "projectId:0abb823c9c014cd2ac63886d5b00c13c");
 
-
+        System.out.println("测试release开分支，打tag，修复bug");
         final GlanceApi glanceApi = ContextBuilder.newBuilder("openstack-glance")
                 .apiVersion("v2.4")
                 .endpoint("http://192.168.251.12:5000/v3")
