@@ -47,7 +47,7 @@
                 <version>3.0.0-M1</version>
                 <configuration>
                     <tagBase>https://github.com/a394023466/releases</tagBase>
-                    <arguments>-DskipTests,-DuseReleaseProfile=false</arguments>
+                    <arguments>-DskipTests</arguments>
                     <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
