@@ -37,7 +37,7 @@
     </dependencies>
 
     <scm>
-        <developerConnection>scm:git:https://github.com/a394023466</developerConnection>
+        <developerConnection>scm:git:https://github.com/a394023466/learn-parent.git</developerConnection>
     </scm>
 
     <build>
