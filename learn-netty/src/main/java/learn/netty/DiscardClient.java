@@ -1,6 +1,7 @@
 package learn.netty;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -37,9 +38,6 @@ public class DiscardClient {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             final ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-                            pipeline.addLast(DECODER);
-                            pipeline.addLast(ENCODER);
                             pipeline.addLast(new DiscardClientHandler());
                         }
                     });
@@ -59,8 +57,11 @@ public class DiscardClient {
                     break;
                 }
 
+                final ByteBuf buffer = ch.alloc().buffer(1);
+                buffer.writeBytes((line+"\r\n").getBytes());
+
                 // Sends the received line to the server.
-                lastWriteFuture = ch.writeAndFlush(line + "\r\n");
+                lastWriteFuture = ch.writeAndFlush(buffer);
 
                 // If user typed the 'bye' command, wait until the server closes
                 // the connection.
@@ -75,9 +76,7 @@ public class DiscardClient {
                 lastWriteFuture.sync();
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         } finally {
             nioEventLoopGroup.shutdownGracefully();

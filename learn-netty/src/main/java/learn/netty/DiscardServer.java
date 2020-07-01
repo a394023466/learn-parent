@@ -7,8 +7,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
@@ -57,11 +55,11 @@ public class DiscardServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             final ChannelPipeline pipeline = ch.pipeline();
-                            // Add the text line codec combination first,
-                            pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-                            // the encoder and decoder are static as these are sharable
-                            pipeline.addLast(DECODER);
-                            pipeline.addLast(ENCODER);
+//                            // Add the text line codec combination first,
+//                            pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
+//                            // the encoder and decoder are static as these are sharable
+//                            pipeline.addLast(DECODER);
+//                            pipeline.addLast(ENCODER);
                             pipeline.addLast(new DiscardServerHandler());
                         }
                     })

@@ -7,14 +7,11 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import learn.netty.DiscardServerHandler;
 
 /**
  * @author: Lenovo
@@ -63,16 +60,18 @@ public class HeartBeatServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             final ChannelPipeline pipeline = ch.pipeline();
                             //第一个处理Channel中数据的Handler
-                            pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-                            //第二个处理Channel中数据的Handler，数据是上一个Handler处理后的结果
-                            pipeline.addLast(DECODER);
-                            //第三个处理Channel中数据的Handler
-                            pipeline.addLast(ENCODER);
-                            //第四个处理Channel中数据的Handler
-                            pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 10, 0));
+//                            pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
+//                            //第二个处理Channel中数据的Handler，数据是上一个Handler处理后的结果
+//                            pipeline.addLast(DECODER);
+//                            //第三个处理Channel中数据的Handler
+//                            pipeline.addLast(ENCODER);
+                            //第四个处理Channel中数据的Handler，用于监控服务端与客户端的通信状态，也可以理解为心跳机制
+                            pipeline.addLast("idleStateHandler", new IdleStateHandler(600, 600, 0));
                             //第五个处理Channel中数据的Handler
                             pipeline.addLast("heartBeatHandler", new HeartBeatHandler());
-                            pipeline.addLast("HeartBeatHandler1", new HeartBeatHandler1());
+                            //用于积攒消息的Handler，攒够一定大小后再交由下游Handler处理
+                            pipeline.addLast("messageMeetHandler", new MessageMeetHandler());
+                            pipeline.addLast("ProcessHandler", new ProcessHandler());
                         }
                     })
                     /**
@@ -96,6 +95,5 @@ public class HeartBeatServer {
             work.shutdownGracefully();
             boss.shutdownGracefully();
         }
-
     }
 }

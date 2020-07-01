@@ -1,37 +1,16 @@
-package learn.netty;
+package learn.netty.heartbeat;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.util.ReferenceCountUtil;
 
 /**
- * @author: liyuzhi
- * @date: 2020/5/18 17:30
- * @version: 1
+ * @author: Lenovo
+ * @date:Create：in 2020/5/19 14:12
  */
-public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
-
+public class ProcessHandler extends ChannelInboundHandlerAdapter {
     ByteBuf byteBuf;
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if (evt instanceof IdleStateEvent) {
-            IdleStateEvent e = (IdleStateEvent) evt;
-            //表示有一段时间没有接收到数据了
-            if (e.state() == IdleState.READER_IDLE) {
-                ctx.close();
-            }
-            //表示有一定的时间没有发送数据了
-            else if (e.state() == IdleState.WRITER_IDLE) {
-                ctx.writeAndFlush(0);
-            }
-        }
-    }
 
 
     /**
@@ -54,7 +33,8 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
+        cause.printStackTrace();
+        ctx.close();
     }
 
     /**
@@ -99,24 +79,32 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = (ByteBuf) msg;
-        try {
-            byteBuf.writeBytes(buf);
+        final ChannelHandler handler = ctx.handler();
+        System.out.println(handler.getClass().getSimpleName());
 
-            if (byteBuf.readableBytes() >= 10) {
-                final ChannelFuture future = ctx.write(byteBuf);
-                /**
-                 * 监听服务端写数据到客户端后，客户端收到以后再与客户端断开连接，否则有的时候客户端收不到数据，有两种方式
-                 * 1.future.addListener(ChannelFutureListener.CLOSE);
-                 * 2.future.addListener((ChannelFutureListener) f -> {
-                 *     if (f == future) ctx.close();
-                 *   });
-                 */
-                future.addListener(ChannelFutureListener.CLOSE);
-            }
-        } finally {
-            buf.release();
+        byteBuf.retain();
+        ByteBuf buf = (ByteBuf) msg;
+
+        while (buf.isReadable()) {
+            System.out.println((char) buf.readByte());
+            System.out.flush();
         }
+        //读取位置恢复到最初位置，作用就是下边读取ByteBuf的时候还能够读到数据
+        buf.resetReaderIndex();
+
+
+        byteBuf.writeBytes(buf);
+        buf.release();
+        final ChannelFuture future = ctx.writeAndFlush(byteBuf);
+
+        /**
+         * 监听服务端写数据到客户端后，客户端收到以后再与客户端断开连接，否则有的时候客户端收不到数据，有两种方式
+         * 1.future.addListener(ChannelFutureListener.CLOSE);
+         * 2.future.addListener((ChannelFutureListener) f -> {
+         *     if (f == future) ctx.close();
+         *   });
+         */
+        // future.addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
     }
 
     /**
@@ -128,7 +116,7 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         //这个方法清空当前类中的成员变量 ByteBuf byteBuf的缓冲区，使得ByteBuf的refCount重置为1
-        ctx.flush();
+        //ctx.flush();
     }
 
     /**
@@ -151,5 +139,6 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         byteBuf = null;
+
     }
 }

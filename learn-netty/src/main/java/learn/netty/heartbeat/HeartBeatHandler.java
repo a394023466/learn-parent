@@ -6,8 +6,11 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
 /**
- * @author: Lenovo
- * @date:Create：in 2020/5/19 14:12
+ * 用于监控服务端与客户端的通信Handler
+ *
+ * @author: liyuzhi
+ * @date: 2020/5/20 10:31
+ * @version: 1
  */
 public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
 
@@ -40,7 +43,7 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         //这个方法的功能是将消息传递给下一个Handler处理器去处理
-        ctx.fireChannelRead(msg + "aaaaa\r\n");
+        ctx.fireChannelRead(msg);
     }
 
     @Override

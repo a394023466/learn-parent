@@ -1,12 +1,11 @@
 package learn.netty.heartbeat;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import learn.netty.DiscardClientHandler;
@@ -17,10 +16,9 @@ import java.io.InputStreamReader;
 
 /**
  * @author: Lenovo
- * @date:Create：in 2020/5/19 14:20
+ * @date:Create：in 2020/5/19 10:14
  */
 public class HeartBeatClient {
-
 
     private static final StringDecoder DECODER = new StringDecoder();
     private static final StringEncoder ENCODER = new StringEncoder();
@@ -39,9 +37,6 @@ public class HeartBeatClient {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             final ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-                            pipeline.addLast(DECODER);
-                            pipeline.addLast(ENCODER);
                             pipeline.addLast(new DiscardClientHandler());
                         }
                     });
@@ -61,8 +56,11 @@ public class HeartBeatClient {
                     break;
                 }
 
+                final ByteBuf buffer = ch.alloc().buffer(50);
+                buffer.writeBytes((line).getBytes());
+
                 // Sends the received line to the server.
-                lastWriteFuture = ch.writeAndFlush(line + "\r\n");
+                lastWriteFuture = ch.writeAndFlush(buffer);
 
                 // If user typed the 'bye' command, wait until the server closes
                 // the connection.
@@ -84,4 +82,5 @@ public class HeartBeatClient {
         }
 
     }
+
 }

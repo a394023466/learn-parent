@@ -15,6 +15,7 @@
         <module>learn-nio</module>
         <module>learn-es</module>
         <module>learn-netty</module>
+        <module>learn-openstack</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -23,6 +24,7 @@
         <junit.version>4.13</junit.version>
         <elasticsearch.version>5.6.1</elasticsearch.version>
         <netty.version>4.1.50.Final</netty.version>
+        <jclouds.version>2.2.0</jclouds.version>
     </properties>
 
     <dependencies>
