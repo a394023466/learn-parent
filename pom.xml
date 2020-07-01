@@ -36,7 +36,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/a394023466/learn-parent.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>my-branch</tag>
   </scm>
 
     <build>
