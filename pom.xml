@@ -5,7 +5,7 @@
     <groupId>learn.parent</groupId>
     <artifactId>learn-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <modules>
         <module>learn-thread</module>
         <module>learn-guava</module>
@@ -36,7 +36,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/a394023466/learn-parent.git</developerConnection>
-      <tag>v1.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <build>
