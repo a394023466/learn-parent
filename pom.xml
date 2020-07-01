@@ -49,6 +49,7 @@
                     <tagBase>https://github.com/a394023466/releases</tagBase>
                     <arguments>-DskipTests</arguments>
                     <releaseProfiles>release</releaseProfiles>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
         </plugins>
