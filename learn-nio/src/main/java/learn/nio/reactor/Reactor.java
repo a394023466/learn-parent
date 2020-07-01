@@ -56,6 +56,7 @@ public class Reactor implements Runnable {
                 while (keyIterator.hasNext()) {
                     final SelectionKey selectionKey = keyIterator.next();
                     dispatch(selectionKey);
+
                     selected.clear();
                 }
             }
