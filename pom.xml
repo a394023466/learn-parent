@@ -14,6 +14,10 @@
         <module>learn-es</module>
         <module>learn-netty</module>
         <module>learn-openstack</module>
+        <module>learn-mongodb</module>
+        <module>learn-clickhouse</module>
+        <module>learn-kafka</module>
+        <module>learn-hook</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
