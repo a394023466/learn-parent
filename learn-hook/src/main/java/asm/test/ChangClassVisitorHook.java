@@ -1,3 +1,6 @@
+package asm.test;
+
+
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
@@ -9,26 +12,26 @@ import org.objectweb.asm.commons.Method;
  */
 public class ChangClassVisitorHook extends AdviceAdapter {
 
-
     private String desc;
 
-    protected ChangClassVisitorHook(MethodVisitor methodVisitor, int i, String name, String desc) {
-        super(methodVisitor, i, name, desc);
-        this.desc = desc;
+    protected ChangClassVisitorHook(int api, MethodVisitor methodVisitor, int access, String name, String descriptor) {
+        super(api, methodVisitor, access, name, descriptor);
+        this.desc=descriptor;
     }
 
     @Override
-    protected void onMethodExit(int i) {
-        super.onMethodExit(i);
-        if (i != 191 && "()Ljava/lang/String;".equals(desc)) {
+    protected void onMethodExit(int opcode) {
+        super.onMethodExit(opcode);
+        if (opcode != 191 && "()Ljava/lang/String;".equals(desc)) {
             invokeStatic(Type.getType(ChangClassVisitorHook.class), new Method("onInputStreamRead", "()V"));
         }
+
     }
 
     /**
      * hook函数
      */
-    public static void onInputStreamRead( ) {
+    public static void onInputStreamRead() {
         System.out.println("onInputStreamRead====");
     }
 }

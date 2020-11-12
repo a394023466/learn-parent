@@ -13,18 +13,31 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.objectweb.asm/com.springsource.org.objectweb.asm -->
+        <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm-commons -->
         <dependency>
-            <groupId>org.objectweb.asm</groupId>
-            <artifactId>com.springsource.org.objectweb.asm</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.objectweb.asm/com.springsource.org.objectweb.asm.commons -->
-        <dependency>
-            <groupId>org.objectweb.asm</groupId>
-            <artifactId>com.springsource.org.objectweb.asm.commons</artifactId>
-            <version>3.2.0</version>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.objectweb.asm/com.springsource.org.objectweb.asm.commons -->
+        <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm-commons -->
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>9.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.23.1-GA</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -37,8 +50,8 @@
                     </descriptorRefs>
                     <archive>
                         <manifestEntries>
-                            <Premain-Class>ASMAgent</Premain-Class>
-                            <Agent-Class>ASMAgent</Agent-Class>
+                            <Premain-Class>asm.test.ASMAgent</Premain-Class>
+                            <Agent-Class>asm.test.ASMAgent</Agent-Class>
                             <Can-Redefine-Classes>true</Can-Redefine-Classes>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>
                         </manifestEntries>
